@@ -4,14 +4,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  semantic-release:
+  release:
     permissions:
       contents: write
       issues: write
       pull-requests: write    
     runs-on: ubuntu-latest
-    container:
-      image: docker://cclorg/semantic-release
+    # container:
+    #   image: docker://cclorg/semantic-release
     steps:
     - uses: actions/checkout@v1
 
