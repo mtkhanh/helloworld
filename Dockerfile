@@ -13,14 +13,17 @@ RUN apt-get update && apt-get install -y cmake gcovr lcov
 # Compile the project using CMake
 RUN cmake -Bbuild -H. && cmake --build build --target all
 
+
 # Run the unit tests
-RUN ./build/ctest
+WORKDIR /build/
+RUN ctest
 
-# Generate code coverage report
-RUN cmake --build build --target coverage
+# # Generate code coverage report
+# WORKDIR /
+# RUN cmake --build build --target coverage
 
-# Expose the coverage report
-EXPOSE 80
+# # Expose the coverage report
+# EXPOSE 80
 
-# Command to start a simple HTTP server to serve the coverage report
-CMD python3 -m http.server 80 --directory build/coverage/
+# # Command to start a simple HTTP server to serve the coverage report
+# CMD python3 -m http.server 80 --directory build/coverage/
