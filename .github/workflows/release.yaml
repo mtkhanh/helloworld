@@ -32,7 +32,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: hello_world_project:latest
+        tags: mtkhanh/hello_world_project:latest
 
     #- name: Push Docker Image
     - name: Release 
