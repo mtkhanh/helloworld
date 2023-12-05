@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y cmake gcovr lcov
 RUN cmake -Bbuild -H. && cmake --build build --target all
 
 # Run the unit tests
-RUN ./build/unit_tests
+RUN ./build/ctest
 
 # Generate code coverage report
 RUN cmake --build build --target coverage

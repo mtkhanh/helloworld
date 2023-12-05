@@ -1,0 +1,30 @@
+name: semantic-release
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  semantic-release:
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write    
+    runs-on: ubuntu-latest
+    container:
+      image: docker://cclorg/semantic-release
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install dependencies
+      run: npm install @semantic-release/github -D
+
+    - name: Build Docker Image
+      id: build
+      run: docker build -t hello_world_project .
+
+    #- name: Push Docker Image
+    - name: Release 
+      if: steps.build.outcome == 'success'
+      run: npx semantic-release -p
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
