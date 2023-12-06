@@ -1,5 +1,7 @@
 ---
-branch: master
+#branch: master
+branches:
+  - main
 preset: "angular"
 tagFormat: "${version}"
 plugins:

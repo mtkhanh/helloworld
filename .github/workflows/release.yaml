@@ -10,8 +10,6 @@ jobs:
       issues: write
       pull-requests: write    
     runs-on: ubuntu-latest
-    # container:
-    #   image: docker://cclorg/semantic-release
     steps:
     - uses: actions/checkout@v1
 
@@ -27,15 +25,22 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     -
+      name: Get next release version
+      id: get-next-version
+      run: echo "NEXT_VERSION=$(npx semantic-release --dry-run | grep -i 'The next release version is' | sed -E 's/.* ([[:digit:].]+)$/\1/'" >> $GITHUB_ENV
+
+    -
       name: Build and push
       uses: docker/build-push-action@v5
+      id: build
+      env:
+        NEXT_VERSION: ${{ steps.get-next-version.outputs.NEXT_VERSION }}
       with:
         context: .
         push: true
-        tags: mtkhanh/hello_world_project:latest
+        tags: mtkhanh/hello_world_project:$NEXT_VERSION, mtkhanh/hello_world_project:latest
 
-    #- name: Push Docker Image
-    - name: Release 
+    - name: Release
       if: steps.build.outcome == 'success'
       run: npx semantic-release -p
       env:

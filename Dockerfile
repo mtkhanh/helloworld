@@ -18,9 +18,9 @@ RUN cmake -Bbuild -H. && cmake --build build --target all
 WORKDIR /build/
 RUN ctest
 
-# # Generate code coverage report
-# WORKDIR /
-# RUN cmake --build build --target coverage
+# Generate code coverage report
+WORKDIR /
+RUN cmake --build build --target coverage
 
 # # Expose the coverage report
 # EXPOSE 80
