@@ -14,19 +14,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 # Add main.cpp as the source file for the main executable
 add_executable(main src/main.cpp)
 
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+# Add subdirectory for Google Test
+add_subdirectory(libs/googletest)
 
-# Include directories for Google Test
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-
-# Enable testing using CTest
+# Enable testing
 enable_testing()
 
 add_executable(

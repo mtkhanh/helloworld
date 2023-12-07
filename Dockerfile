@@ -1,29 +1,31 @@
-# Use a base image with CMake and GCC installed
-FROM gcc:latest
+# Use a base image with CMake and a C++ compiler (e.g., Ubuntu with g++)
+FROM ubuntu:latest
 
-# Set working directory in the container
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    lcov \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
 WORKDIR /app
 
-# Copy the project files into the container
-COPY . .
+# Copy source code
+COPY . /app
 
-# Install necessary packages for code coverage (gcovr, lcov)
-RUN apt-get update && apt-get install -y cmake gcovr lcov
-
-# Compile the project using CMake
+# Build the project
 RUN cmake -Bbuild -H. && cmake --build build --target all
 
+# Run tests
+RUN cd build && ctest
 
-# Run the unit tests
-WORKDIR /build/
-RUN ctest
+# Generate code coverage report
+RUN cd build \
+    && lcov --directory . --capture --output-file coverage.info \
+    && lcov --remove coverage.info '/usr/*' --remove coverage.info '/app/libs/*' --output-file coverage.info \
+    && lcov --list coverage.info
 
-# # Generate code coverage report
-# WORKDIR /
-# RUN cmake --build build --target coverage
-
-# # Expose the coverage report
-# EXPOSE 80
-
-# # Command to start a simple HTTP server to serve the coverage report
-# CMD python3 -m http.server 80 --directory build/coverage/
+# Command to print the coverage report when the container is run
+ENTRYPOINT ["sh", "-c", "cd build && lcov --list coverage.info"]
