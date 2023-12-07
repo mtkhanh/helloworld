@@ -1,0 +1,12 @@
+#!/bin/bash
+
+commit_msg_file=$1
+commit_msg=$(cat "$commit_msg_file")
+
+# Define your commit message format regex
+commit_msg_regex="^(feat|fix|docs|style|refactor|test|chore)(\([A-Za-z0-9-_]+\))?: .{1,100}$"
+
+if ! [[ $commit_msg =~ $commit_msg_regex ]]; then
+    echo "Invalid commit message format. Please follow the specified format: type(scope): message"
+    exit 1  # Exit with a non-zero status to abort the commit
+fi
