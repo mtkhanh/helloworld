@@ -6,12 +6,13 @@ on:
 jobs:
   release:
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write    
+      contents: write   
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'true'
+        ssh-key: ${{ secrets.SECRET_KEY }}
 
     - name: Install dependencies
       run: npm install @semantic-release/github @semantic-release/changelog @semantic-release/git -D
